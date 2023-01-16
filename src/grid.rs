@@ -6,7 +6,7 @@ pub struct Grid{
     pub cells: Vec<Vec<Cell>>,
 }
 
-const CELL_SIZE: f32 = 30.0;
+const CELL_SIZE: f32 = 20.0;
 
 impl Grid{
     pub fn new(size: u8)->Grid{
@@ -65,7 +65,7 @@ impl Grid{
             }
         }
         let algo = format!("- {}", algo);
-        draw_text(&algo, CELL_SIZE*2.0, CELL_SIZE*12.0 - 5.0, 20.0, GREEN);
+        draw_text(&algo, CELL_SIZE*2.0, CELL_SIZE*12.0 - 5.0, 10.0, GREEN);
     
     }
 }

@@ -6,6 +6,8 @@ mod grid;
 mod binary_tree;
 mod side_winder;
 
+const CELL_SIZE: f32 = 20.0;
+
 #[macroquad::main(conf)]
 async fn main() {
     let mut grid = grid::Grid::new(10);
@@ -50,8 +52,8 @@ fn configure(grid: &mut grid::Grid){
 fn conf() -> Conf {
     Conf {
         window_title: String::from("Labyrinth"),
-        window_width: 360,
-        window_height: 360,
+        window_width: CELL_SIZE as i32 *(10 + 2),
+        window_height: CELL_SIZE as i32 *(10 + 2),
         ..Default::default()
     }
 }
