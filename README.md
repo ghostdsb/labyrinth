@@ -10,3 +10,8 @@ Mazes For Programmers in Rust
 ## Sidewinder Algorithm
 
 ![Sidewinder Labyrinth](./labyrinths/sidewinder.png)
+
+## Djikstra Solutions
+
+![Binary Tree Labyrinth](./labyrinths/binary_dijkstra_sol.png)
+![Sidewinder Labyrinth](./labyrinths/sidewinder_djikstra_sol.png)
