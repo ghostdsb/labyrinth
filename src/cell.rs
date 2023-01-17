@@ -2,8 +2,8 @@ use crate::constants;
 
 #[derive(PartialEq, Clone, Copy)]
 pub struct Cell {
-    pub row: u8,
-    pub col: u8,
+    pub row: usize,
+    pub col: usize,
     pub east: bool,
     pub west: bool,
     pub north: bool,
@@ -13,10 +13,10 @@ pub struct Cell {
     pub solution_path: bool,
 }
 
-const GRID_SIZE: u8 = constants::GRID_SIZE;
+const GRID_SIZE: usize = constants::GRID_SIZE;
 
 impl Cell {
-    pub fn new(row: u8, col: u8) -> Cell {
+    pub fn new(row: usize, col: usize) -> Cell {
         let (east, west, north, south) = (true, true, true, true);
         Cell {
             row,
@@ -44,7 +44,7 @@ impl Cell {
         self.south
     }
 
-    pub fn north_neighbour(&self) -> Option<(u8, u8)> {
+    pub fn north_neighbour(&self) -> Option<(usize, usize)> {
         if self.row == 0 {
             None
         } else {
@@ -52,7 +52,7 @@ impl Cell {
         }
     }
 
-    pub fn west_neighbour(&self) -> Option<(u8, u8)> {
+    pub fn west_neighbour(&self) -> Option<(usize, usize)> {
         if self.col == 0 {
             None
         } else {
@@ -60,7 +60,7 @@ impl Cell {
         }
     }
 
-    pub fn south_neighbour(&self) -> Option<(u8, u8)> {
+    pub fn south_neighbour(&self) -> Option<(usize, usize)> {
         if self.row == GRID_SIZE - 1 {
             None
         } else {
@@ -68,7 +68,7 @@ impl Cell {
         }
     }
 
-    pub fn east_neighbour(&self) -> Option<(u8, u8)> {
+    pub fn east_neighbour(&self) -> Option<(usize, usize)> {
         if self.col == GRID_SIZE - 1 {
             None
         } else {
@@ -82,5 +82,13 @@ impl Cell {
 
     pub fn remove_south_wall(&mut self) {
         self.south = false
+    }
+
+    pub fn remove_north_wall(&mut self) {
+        self.north = false
+    }
+
+    pub fn remove_west_wall(&mut self) {
+        self.west = false
     }
 }

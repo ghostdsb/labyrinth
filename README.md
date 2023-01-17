@@ -22,3 +22,13 @@ This lets us see, quite clearly, the structure of the maze. We’re shining Dijk
 For example, the first labyrinth was generated using binary tree algorithm and second using sidewinder algorithm.
 ![Binary Tree Labyrinth](./labyrinths/col-binary.png)
 ![Sidewinder Labyrinth](./labyrinths/col-sidewinder.png)
+
+## Aldous Broder Algorithm
+
+In Aldous Broder Algorithm we randomly hop from cell to neighbour cell and create a path through them(in not already present).
+A time taking algo, but lacks bias.
+
+![Aldous Broder Labyrinth path](./labyrinths/aldous_broder_path.png)
+![Aldous Broder Labyrinth bg](./labyrinths/aldous_broder_background.png)
+
+> [**L:** Longest path in Labyrinth;   **R:** flow-fill along the longest path]
