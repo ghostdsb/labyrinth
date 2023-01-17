@@ -2,15 +2,22 @@ use crate::cell::Cell;
 use crate::constants;
 use macroquad::prelude::*;
 
+#[derive(PartialEq)]
+pub enum MODE {
+    BACKGROUNDS,
+    WALLS,
+}
+
 pub struct Grid {
     pub size: u8,
     pub cells: Vec<Vec<Cell>>,
+    mode: MODE,
 }
 
 const CELL_SIZE: f32 = constants::CELL_SIZE;
 
 impl Grid {
-    pub fn new(size: u8) -> Grid {
+    pub fn new(size: u8, mode: MODE) -> Grid {
         let mut grid: Vec<Vec<Cell>> = vec![];
         for i in 0..size {
             let mut r: Vec<Cell> = vec![];
@@ -19,7 +26,11 @@ impl Grid {
             }
             grid.push(r);
         }
-        Grid { size, cells: grid }
+        Grid {
+            size,
+            cells: grid,
+            mode,
+        }
     }
 
     pub fn neighbours(&self, index: (u8, u8)) -> Vec<(u8, u8)> {
@@ -60,7 +71,7 @@ impl Grid {
         neighbours
     }
 
-    pub fn render(&self, algo: &str) {
+    pub fn render(&self, max_distance: u32) {
         // let mut c = 0;
         for i in 0..self.size {
             for j in 0..self.size {
@@ -78,45 +89,53 @@ impl Grid {
                 let rb_x = rt_x;
                 let rb_y = lb_y;
 
+                let mut wall_color = BLUE;
+
+                if self.mode == MODE::BACKGROUNDS {
+                    let mut col = ORANGE;
+                    col.a = cell.distance as f32 / max_distance as f32;
+                    wall_color = BLACK;
+                    draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, WHITE);
+                    draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, col);
+                }
                 // north
                 if cell.north_wall() {
-                    draw_line(lt_x, lt_y, rt_x, rt_y, 1.0, BLUE);
+                    draw_line(lt_x, lt_y, rt_x, rt_y, 0.5, wall_color);
                 }
 
                 // west
                 if cell.west_wall() {
-                    draw_line(lt_x, lt_y, lb_x, lb_y, 1.0, BLUE);
+                    draw_line(lt_x, lt_y, lb_x, lb_y, 0.5, wall_color);
                 }
 
                 // south
                 if cell.south_wall() {
-                    draw_line(lb_x, lb_y, rb_x, rb_y, 1.0, BLUE);
+                    draw_line(lb_x, lb_y, rb_x, rb_y, 0.5, wall_color);
                 }
 
                 // east
                 if cell.east_wall() {
-                    draw_line(rt_x, rt_y, rb_x, rb_y, 1.0, BLUE);
+                    draw_line(rt_x, rt_y, rb_x, rb_y, 0.5, wall_color);
                 }
 
-                let alpha = if cell.solution_path { 1.0 } else { 0.2 };
+                // if self.mode == MODE::WALLS{
+                // let alpha = if cell.solution_path { 1.0 } else { 0.5 };
                 // if cell.solution_path{
-                let t = format!("{}", cell.distance);
-                draw_text(
-                    &t,
-                    lt_x + CELL_SIZE / 2.0 - 5.0,
-                    lt_y + CELL_SIZE / 2.0 + 5.0,
-                    CELL_SIZE * 0.75,
-                    Color {
-                        r: 0.0,
-                        g: 255.0,
-                        b: 0.0,
-                        a: alpha,
-                    },
-                );
+                // let t = format!("{}", cell.distance);
+                // draw_text(
+                //     &t,
+                //     lt_x + CELL_SIZE / 2.0 - 5.0,
+                //     lt_y + CELL_SIZE / 2.0 + 5.0,
+                //     CELL_SIZE * 0.75,
+                //     Color {
+                //         r: 0.0,
+                //         g: 0.0,
+                //         b: 0.0,
+                //         a: alpha,
+                //     },
+                // );}
                 // }
             }
         }
-        // let algo = format!("- {}", algo);
-        // draw_text(&algo, CELL_SIZE * 2.0, CELL_SIZE * 12.0 - 5.0, 30.0, GREEN);
     }
 }

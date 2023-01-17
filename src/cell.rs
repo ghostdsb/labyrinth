@@ -1,3 +1,5 @@
+use crate::constants;
+
 #[derive(PartialEq, Clone, Copy)]
 pub struct Cell {
     pub row: u8,
@@ -10,6 +12,8 @@ pub struct Cell {
     pub distance: u32,
     pub solution_path: bool,
 }
+
+const GRID_SIZE: u8 = constants::GRID_SIZE;
 
 impl Cell {
     pub fn new(row: u8, col: u8) -> Cell {
@@ -57,7 +61,7 @@ impl Cell {
     }
 
     pub fn south_neighbour(&self) -> Option<(u8, u8)> {
-        if self.row == 9 {
+        if self.row == GRID_SIZE - 1 {
             None
         } else {
             Some((self.row + 1, self.col))
@@ -65,7 +69,7 @@ impl Cell {
     }
 
     pub fn east_neighbour(&self) -> Option<(u8, u8)> {
-        if self.col == 9 {
+        if self.col == GRID_SIZE - 1 {
             None
         } else {
             Some((self.row, self.col + 1))
