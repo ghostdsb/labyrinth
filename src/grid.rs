@@ -90,7 +90,13 @@ impl Grid {
     }
 
     pub fn render(&self, max_distance: u32) {
-        draw_rectangle(CELL_SIZE, CELL_SIZE, CELL_SIZE*(GRID_SIZE) as f32, CELL_SIZE* (GRID_SIZE) as f32, ORANGE);
+        draw_rectangle(
+            CELL_SIZE,
+            CELL_SIZE,
+            CELL_SIZE * (GRID_SIZE) as f32,
+            CELL_SIZE * (GRID_SIZE) as f32,
+            FLOW_BACKGROUND,
+        );
         // let mut c = 0;
         for i in 0..self.size {
             for j in 0..self.size {
@@ -114,23 +120,51 @@ impl Grid {
                     let mut col = FLOW_COLOR;
                     col.a = cell.distance as f32 / max_distance as f32;
                     wall_color = WALL_COLOR;
+
                     draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, FLOW_BACKGROUND);
-                    draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, col);
-                }else {
+                    let intensity =
+                        (max_distance as f32 - cell.distance as f32) / max_distance as f32;
+                    let dark = intensity;
+                    let bright = 0.5 + 0.5*intensity;
+                    draw_rectangle(
+                        lt_x,
+                        lt_y,
+                        CELL_SIZE,
+                        CELL_SIZE,
+                        Color {
+                            r: bright,
+                            g: dark,
+                            b: bright,
+                            a: 1f32,
+                        },
+                    );
+                } else {
                     // draw_rectangle(lt_x, lt_y, CELL_SIZE*(GRID_SIZE-10) as f32, CELL_SIZE* (GRID_SIZE-10) as f32, ORANGE);
                     // let a = if cell.solution_path { 1.0 } else { 0.5 };
                     if cell.solution_path {
-                        let mut col = FLOW_COLOR;
-                        col.a = cell.distance as f32 / max_distance as f32;
-                        wall_color = WALL_COLOR;
                         draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, FLOW_BACKGROUND);
-                        draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, col);
+                        let intensity =
+                            (max_distance as f32 - cell.distance as f32) / max_distance as f32;
+                        let dark = intensity;
+                        let bright = 0.5 + 0.5 * intensity;
+                        // draw_rectangle(
+                        //     lt_x,
+                        //     lt_y,
+                        //     CELL_SIZE,
+                        //     CELL_SIZE,
+                        //     Color {
+                        //         r: dark,
+                        //         g: bright,
+                        //         b: bright,
+                        //         a: 1f32,
+                        //     },
+                        // );
                         let t = format!("{}", cell.distance);
                         // let t = format!("{}, {}", cell.row, cell.col);
                         draw_text(
                             &t,
-                            lt_x + CELL_SIZE / 2.0 - 5.0/3.0,
-                            lt_y + CELL_SIZE / 2.0 + 5.0/3.0,
+                            lt_x + CELL_SIZE / 2.0 - 5.0 / 3.0,
+                            lt_y + CELL_SIZE / 2.0 + 5.0 / 3.0,
                             8.0,
                             // CELL_SIZE * 0.75,
                             TEXT_COLOR,
@@ -157,7 +191,6 @@ impl Grid {
                 if cell.east_wall() {
                     draw_line(rt_x, rt_y, rb_x, rb_y, 1.0, wall_color);
                 }
-
             }
         }
     }

@@ -9,6 +9,7 @@ mod config;
 mod distances;
 mod grid;
 mod side_winder;
+mod wilson;
 
 const CELL_SIZE: f32 = config::CELL_SIZE;
 const GRID_SIZE: usize = config::GRID_SIZE;
@@ -28,26 +29,29 @@ async fn main() {
         3 => {
             aldous_broder::on(&mut grid);
         }
+        4 => {
+            wilson::on(&mut grid);
+        }
         _ => unimplemented!(),
     }
 
     configure(&mut grid);
 
-    let start = (0, 0);
+    let start = (GRID_SIZE / 2, GRID_SIZE / 2);
     let target = (GRID_SIZE - 1, GRID_SIZE - 1);
 
     distances::distances(&mut grid, start);
     distances::solution(&mut grid, start, target);
 
-    let (_max_distance, cell) = distances::farthest_cell(&grid, start);
-
-    let start = cell;
-    distances::distances(&mut grid, start);
     let (max_distance, cell) = distances::farthest_cell(&grid, start);
-    distances::solution(&mut grid, start, cell);
+
+    // let start = cell;
+    // distances::distances(&mut grid, start);
+    // let (max_distance, cell) = distances::farthest_cell(&grid, start);
+    // distances::solution(&mut grid, start, cell);
 
     loop {
-        grid.render(max_distance);
+        grid.render(25);
         next_frame().await
     }
 }

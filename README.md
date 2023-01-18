@@ -32,3 +32,14 @@ A time taking algo, but lacks bias.
 ![Aldous Broder Labyrinth bg](./labyrinths/aldous_broder_background.png)
 
 > [**L:** Longest path in Labyrinth;   **R:** flow-fill along the longest path]
+
+## Wilson Algorithm
+
+The algorithm starts by choosing a point on the grid—any point—and marking it visited. Then it chooses any unvisited cell in the grid and does one of these loop-erased random walks until it encounters a visited cell. At that point it adds the path it followed to the maze, marking as visited each of the cells along that path, and then it goes again. The process repeats until all the cells in the grid have been visited.
+
+Unbaised like Aldous Broder but focuses on visited cells rather than unvisited cells.
+
+![Wilson Labyrinth 1](./labyrinths/wilson1.png)
+![Wilson Labyrinth 2](./labyrinths/wilson2.png)
+
+> Color fans out from center of labyrinth towards deeper, farther paths.
