@@ -1,20 +1,22 @@
+use grid::MODE;
 use macroquad::prelude::*;
 use std::env;
 
 mod aldous_broder;
 mod binary_tree;
 mod cell;
-mod constants;
+mod config;
 mod distances;
 mod grid;
 mod side_winder;
 
-const CELL_SIZE: f32 = constants::CELL_SIZE;
-const GRID_SIZE: usize = constants::GRID_SIZE;
+const CELL_SIZE: f32 = config::CELL_SIZE;
+const GRID_SIZE: usize = config::GRID_SIZE;
+const MODE: MODE = config::MODE;
 
 #[macroquad::main(conf)]
 async fn main() {
-    let mut grid = grid::Grid::new(GRID_SIZE, grid::MODE::WALLS);
+    let mut grid = grid::Grid::new(GRID_SIZE, MODE);
     let arg = &env::args().nth(1).unwrap().parse::<usize>().unwrap();
     match arg {
         1 => {
@@ -85,6 +87,7 @@ fn conf() -> Conf {
         window_title: String::from("Labyrinth"),
         window_width: CELL_SIZE as i32 * (GRID_SIZE + 2) as i32,
         window_height: CELL_SIZE as i32 * (GRID_SIZE + 2) as i32,
+        sample_count: 1,
         ..Default::default()
     }
 }

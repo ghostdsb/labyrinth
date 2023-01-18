@@ -1,4 +1,4 @@
-use crate::constants;
+use crate::config;
 
 #[derive(PartialEq, Clone, Copy)]
 pub struct Cell {
@@ -13,7 +13,7 @@ pub struct Cell {
     pub solution_path: bool,
 }
 
-const GRID_SIZE: usize = constants::GRID_SIZE;
+const GRID_SIZE: usize = config::GRID_SIZE;
 
 impl Cell {
     pub fn new(row: usize, col: usize) -> Cell {

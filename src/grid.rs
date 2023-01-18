@@ -1,5 +1,5 @@
 use crate::cell::Cell;
-use crate::{constants, GRID_SIZE};
+use crate::{config, GRID_SIZE};
 use macroquad::prelude::*;
 
 #[derive(PartialEq)]
@@ -14,7 +14,11 @@ pub struct Grid {
     mode: MODE,
 }
 
-const CELL_SIZE: f32 = constants::CELL_SIZE;
+const CELL_SIZE: f32 = config::CELL_SIZE;
+const FLOW_COLOR: Color = config::FLOW_COLOR;
+const FLOW_BACKGROUND: Color = config::FLOW_BACKGROUND;
+const WALL_COLOR: Color = config::WALL_COLOR;
+const TEXT_COLOR: Color = config::TEXT_COLOR;
 
 impl Grid {
     pub fn new(size: usize, mode: MODE) -> Grid {
@@ -104,38 +108,33 @@ impl Grid {
                 let rb_x = rt_x;
                 let rb_y = lb_y;
 
-                let mut wall_color = BLACK;
+                let mut wall_color = WALL_COLOR;
 
                 if self.mode == MODE::BACKGROUNDS {
-                    let mut col = GREEN;
+                    let mut col = FLOW_COLOR;
                     col.a = cell.distance as f32 / max_distance as f32;
-                    wall_color = BLACK;
-                    draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, WHITE);
+                    wall_color = WALL_COLOR;
+                    draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, FLOW_BACKGROUND);
                     draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, col);
                 }else {
                     // draw_rectangle(lt_x, lt_y, CELL_SIZE*(GRID_SIZE-10) as f32, CELL_SIZE* (GRID_SIZE-10) as f32, ORANGE);
                     // let a = if cell.solution_path { 1.0 } else { 0.5 };
                     if cell.solution_path {
-                        let mut col = MAGENTA;
+                        let mut col = FLOW_COLOR;
                         col.a = cell.distance as f32 / max_distance as f32;
-                        wall_color = BLACK;
-                        draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, WHITE);
+                        wall_color = WALL_COLOR;
+                        draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, FLOW_BACKGROUND);
                         draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, col);
-                        // let t = format!("{}", cell.distance);
-                        // // let t = format!("{}, {}", cell.row, cell.col);
-                        // draw_text(
-                        //     &t,
-                        //     lt_x + CELL_SIZE / 2.0 - 5.0/3.0,
-                        //     lt_y + CELL_SIZE / 2.0 + 5.0/3.0,
-                        //     8.0,
-                        //     // CELL_SIZE * 0.75,
-                        //     Color {
-                        //         r: 0.0,
-                        //         g: 1.0,
-                        //         b: 0.0,
-                        //         a: a,
-                        //     },
-                        // );
+                        let t = format!("{}", cell.distance);
+                        // let t = format!("{}, {}", cell.row, cell.col);
+                        draw_text(
+                            &t,
+                            lt_x + CELL_SIZE / 2.0 - 5.0/3.0,
+                            lt_y + CELL_SIZE / 2.0 + 5.0/3.0,
+                            8.0,
+                            // CELL_SIZE * 0.75,
+                            TEXT_COLOR,
+                        );
                     }
                 }
 
