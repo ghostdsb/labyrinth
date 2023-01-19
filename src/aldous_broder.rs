@@ -5,7 +5,7 @@ use rand::thread_rng;
 pub fn on(grid: &mut Grid) {
     let mut current = (0, 0);
     let mut count = 0;
-    while count != grid.size * grid.size - 1 {
+    while count != grid.alive_cells() - 1 {
         grid.cells[current.0][current.1].visited = true;
 
         let mut neighbours = grid.grid_neighbours(current);

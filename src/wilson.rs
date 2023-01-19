@@ -27,23 +27,26 @@ pub fn on(grid: &mut Grid) {
                 path.pop();
             }
             path.push(cell);
-            path.iter().for_each(|c| println!("{:?}", c));
+            // path.iter().for_each(|c| println!("{:?}", c));
         }
-        println!();
-        for i in 0..path.len()-1{
+        // println!();
+        for i in 0..path.len() - 1 {
             // grid.cells[path[i].0][path[i].1].visited = true;
 
-            if path[i+1].0 == path[i].0 && path[i+1].1 as i32 == path[i].1 as i32 -1{
+            if path[i + 1].0 == path[i].0 && path[i + 1].1 as i32 == path[i].1 as i32 - 1 {
                 grid.cells[path[i].0][path[i].1].remove_west_wall();
-            }else if path[i+1].0 == path[i].0 && path[i+1].1 == path[i].1+1{
+            } else if path[i + 1].0 == path[i].0 && path[i + 1].1 == path[i].1 + 1 {
                 grid.cells[path[i].0][path[i].1].remove_east_wall();
-                
-            }else if path[i+1].0 as i32 == path[i].0 as i32 -1 && path[i+1].1 == path[i].1{
+            } else if path[i + 1].0 as i32 == path[i].0 as i32 - 1 && path[i + 1].1 == path[i].1 {
                 grid.cells[path[i].0][path[i].1].remove_north_wall();
-            }else if path[i+1].0 == path[i].0+1 && path[i+1].1 == path[i].1{
+            } else if path[i + 1].0 == path[i].0 + 1 && path[i + 1].1 == path[i].1 {
                 grid.cells[path[i].0][path[i].1].remove_south_wall();
             }
-            let (idx, _) = unvisited.iter().enumerate().find(|(_id, (r,c))| {*r == path[i].0 && *c == path[i].1}).unwrap();
+            let (idx, _) = unvisited
+                .iter()
+                .enumerate()
+                .find(|(_id, (r, c))| *r == path[i].0 && *c == path[i].1)
+                .unwrap();
             unvisited.remove(idx);
         }
     }

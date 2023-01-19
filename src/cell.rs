@@ -11,12 +11,13 @@ pub struct Cell {
     pub visited: bool,
     pub distance: u32,
     pub solution_path: bool,
+    pub is_alive: bool,
+    pub grid_row_count: usize,
+    pub grid_col_count: usize,
 }
 
-const GRID_SIZE: usize = config::GRID_SIZE;
-
 impl Cell {
-    pub fn new(row: usize, col: usize) -> Cell {
+    pub fn new(row: usize, col: usize, grid_row_count: usize, grid_col_count: usize) -> Cell {
         let (east, west, north, south) = (true, true, true, true);
         Cell {
             row,
@@ -28,6 +29,9 @@ impl Cell {
             visited: false,
             distance: 0,
             solution_path: false,
+            is_alive: true,
+            grid_col_count,
+            grid_row_count
         }
     }
 
@@ -61,7 +65,7 @@ impl Cell {
     }
 
     pub fn south_neighbour(&self) -> Option<(usize, usize)> {
-        if self.row == GRID_SIZE - 1 {
+        if self.row == self.grid_row_count - 1 {
             None
         } else {
             Some((self.row + 1, self.col))
@@ -69,7 +73,7 @@ impl Cell {
     }
 
     pub fn east_neighbour(&self) -> Option<(usize, usize)> {
-        if self.col == GRID_SIZE - 1 {
+        if self.col == self.grid_col_count - 1 {
             None
         } else {
             Some((self.row, self.col + 1))
