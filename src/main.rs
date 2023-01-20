@@ -13,6 +13,7 @@ mod recursive_backtracker;
 mod side_winder;
 mod wilson;
 mod mask;
+mod image_scanner;
 
 const CELL_SIZE: f32 = config::CELL_SIZE;
 const GRID_SIZE: usize = config::GRID_SIZE;
@@ -21,7 +22,8 @@ const MODE: MODE = config::MODE;
 #[macroquad::main(conf)]
 async fn main() {
 
-    let mask_data = mask::Mask::new("mask");
+    // image_scanner::create_mask("repo.png");
+    let mask_data = mask::Mask::new("rp.png");
 
     let mut grid = grid::Grid::new(mask_data.row,mask_data.col);
 
@@ -54,6 +56,10 @@ async fn main() {
         6 => {
             recursive_backtracker::on(&mut grid);
             algorithm = "recursive-backtracker";
+        }
+        7 => {
+            recursive_backtracker::on(&mut grid);
+            algorithm = "recursive-backtracker-scanner";
         }
         _ => unimplemented!(),
     }

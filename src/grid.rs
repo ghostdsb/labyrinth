@@ -169,103 +169,108 @@ impl Grid {
 
                 let wall_color;
 
-                if mode == MODE::BACKGROUNDS {
-                    let mut col = FLOW_COLOR;
-                    col.a = cell.distance as f32 / max_distance as f32;
-                    wall_color = WALL_COLOR;
-                    draw_filled_rect_mut(
-                        &mut image,
-                        Rect::at(lt_x as i32, lt_y as i32)
-                            .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
-                        Rgb([
-                            (wall_color.r * 255f32) as u8,
-                            (wall_color.g * 255f32) as u8,
-                            (wall_color.b * 255f32) as u8,
-                        ]),
-                    );
-                    let intensity =
-                        (max_distance as f32 - cell.distance as f32) / max_distance as f32;
-                    let dark = intensity;
-                    let bright = 0.5 + 0.5 * intensity;
-                    draw_filled_rect_mut(
-                        &mut image,
-                        Rect::at(lt_x as i32, lt_y as i32)
-                            .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
-                        Rgb([
-                            (bright * 255f32) as u8,
-                            (dark * 255f32) as u8,
-                            (bright * 255f32) as u8,
-                        ]),
-                    );
-                } else {
-                    draw_filled_rect_mut(
-                        &mut image,
-                        Rect::at(lt_x as i32, lt_y as i32)
-                            .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
-                        Rgb([
-                            (BLACK.r * 255f32) as u8,
-                            (BLACK.g * 255f32) as u8,
-                            (BLACK.b * 255f32) as u8,
-                        ]),
-                    );
-                    wall_color = BLUE;
+                if self.cells[i][j].is_alive {
+
+                    if mode == MODE::BACKGROUNDS {
+                        let mut col = FLOW_COLOR;
+                        col.a = cell.distance as f32 / max_distance as f32;
+                        wall_color = WALL_COLOR;
+                        draw_filled_rect_mut(
+                            &mut image,
+                            Rect::at(lt_x as i32, lt_y as i32)
+                                .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
+                            Rgb([
+                                (wall_color.r * 255f32) as u8,
+                                (wall_color.g * 255f32) as u8,
+                                (wall_color.b * 255f32) as u8,
+                            ]),
+                        );
+                        let intensity =
+                            (max_distance as f32 - cell.distance as f32) / max_distance as f32;
+                        let dark = intensity;
+                        let bright = 0.5 + 0.5 * intensity;
+                        draw_filled_rect_mut(
+                            &mut image,
+                            Rect::at(lt_x as i32, lt_y as i32)
+                                .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
+                            Rgb([
+                                (bright * 255f32) as u8,
+                                (dark * 255f32) as u8,
+                                (bright * 255f32) as u8,
+                            ]),
+                        );
+                    } else {
+                        draw_filled_rect_mut(
+                            &mut image,
+                            Rect::at(lt_x as i32, lt_y as i32)
+                                .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
+                            Rgb([
+                                (BLACK.r * 255f32) as u8,
+                                (BLACK.g * 255f32) as u8,
+                                (BLACK.b * 255f32) as u8,
+                            ]),
+                        );
+                        wall_color = BLUE;
+                    }
+    
+                    // north
+                    if cell.north_wall() {
+                        draw_line_segment_mut(
+                            &mut image,
+                            (lt_x as f32, lt_y as f32),
+                            (rt_x as f32, rt_y as f32),
+                            Rgb([
+                                (wall_color.r * 255f32) as u8,
+                                (wall_color.g * 255f32) as u8,
+                                (wall_color.b * 255f32) as u8,
+                            ]),
+                        );
+                    }
+    
+                    // west
+                    if cell.west_wall() {
+                        draw_line_segment_mut(
+                            &mut image,
+                            (lt_x as f32, lt_y as f32),
+                            (lb_x as f32, lb_y as f32),
+                            Rgb([
+                                (wall_color.r * 255f32) as u8,
+                                (wall_color.g * 255f32) as u8,
+                                (wall_color.b * 255f32) as u8,
+                            ]),
+                        );
+                    }
+    
+                    // south
+                    if cell.south_wall() {
+                        draw_line_segment_mut(
+                            &mut image,
+                            (lb_x as f32, lb_y as f32),
+                            (rb_x as f32, rb_y as f32),
+                            Rgb([
+                                (wall_color.r * 255f32) as u8,
+                                (wall_color.g * 255f32) as u8,
+                                (wall_color.b * 255f32) as u8,
+                            ]),
+                        );
+                    }
+    
+                    // east
+                    if cell.east_wall() {
+                        draw_line_segment_mut(
+                            &mut image,
+                            (rt_x as f32, rt_y as f32),
+                            (rb_x as f32, rb_y as f32),
+                            Rgb([
+                                (wall_color.r * 255f32) as u8,
+                                (wall_color.g * 255f32) as u8,
+                                (wall_color.b * 255f32) as u8,
+                            ]),
+                        );
+                    }
+
                 }
 
-                // north
-                if cell.north_wall() {
-                    draw_line_segment_mut(
-                        &mut image,
-                        (lt_x as f32, lt_y as f32),
-                        (rt_x as f32, rt_y as f32),
-                        Rgb([
-                            (wall_color.r * 255f32) as u8,
-                            (wall_color.g * 255f32) as u8,
-                            (wall_color.b * 255f32) as u8,
-                        ]),
-                    );
-                }
-
-                // west
-                if cell.west_wall() {
-                    draw_line_segment_mut(
-                        &mut image,
-                        (lt_x as f32, lt_y as f32),
-                        (lb_x as f32, lb_y as f32),
-                        Rgb([
-                            (wall_color.r * 255f32) as u8,
-                            (wall_color.g * 255f32) as u8,
-                            (wall_color.b * 255f32) as u8,
-                        ]),
-                    );
-                }
-
-                // south
-                if cell.south_wall() {
-                    draw_line_segment_mut(
-                        &mut image,
-                        (lb_x as f32, lb_y as f32),
-                        (rb_x as f32, rb_y as f32),
-                        Rgb([
-                            (wall_color.r * 255f32) as u8,
-                            (wall_color.g * 255f32) as u8,
-                            (wall_color.b * 255f32) as u8,
-                        ]),
-                    );
-                }
-
-                // east
-                if cell.east_wall() {
-                    draw_line_segment_mut(
-                        &mut image,
-                        (rt_x as f32, rt_y as f32),
-                        (rb_x as f32, rb_y as f32),
-                        Rgb([
-                            (wall_color.r * 255f32) as u8,
-                            (wall_color.g * 255f32) as u8,
-                            (wall_color.b * 255f32) as u8,
-                        ]),
-                    );
-                }
             }
         }
 

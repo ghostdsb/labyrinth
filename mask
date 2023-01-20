@@ -1,10 +1,10 @@
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
-OOOOOOOOO
+X. ......X
+ ...XX....
+...XXXX...
+ ...XX....
+X. ......X
+X. ......X
+ ...XX....
+...XXXX...
+ ...XX....
+X. ......X
