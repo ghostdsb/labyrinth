@@ -10,9 +10,9 @@ pub fn create_mask(image_path: &str) -> ((u32,u32), Vec<Vec<u8>>){
         for x in 0..width{
             let rgba = image.get_pixel(x,y);
             if rgba[0] > 100{
-                row.push(1u8);
-            }else{
                 row.push(0u8);
+            }else{
+                row.push(1u8);
             }
         }
         mask.push(row);

@@ -17,13 +17,12 @@ mod image_scanner;
 
 const CELL_SIZE: f32 = config::CELL_SIZE;
 const GRID_SIZE: usize = config::GRID_SIZE;
-const MODE: MODE = config::MODE;
 
 #[macroquad::main(conf)]
 async fn main() {
 
     // image_scanner::create_mask("repo.png");
-    let mask_data = mask::Mask::new("rp.png");
+    let mask_data = mask::Mask::new("repo.png");
 
     let mut grid = grid::Grid::new(mask_data.row,mask_data.col);
 

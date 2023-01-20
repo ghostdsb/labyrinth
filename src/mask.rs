@@ -32,12 +32,15 @@ impl Mask{
         //     bits.push(x);
         // }
 
-        let ((width, height), mask) = image_scanner::create_mask(mask);
+        // let height = bits.len();
+        // let width = bits[0].len();
+
+        let ((width, height), bits) = image_scanner::create_mask(mask);
 
         Mask{
             row: height as usize, 
             col: width as usize,
-            bits: mask
+            bits: bits
         }
     }
 }

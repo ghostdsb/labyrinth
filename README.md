@@ -1,5 +1,8 @@
 # Labyrinth
 
+![Labyrinth](./img/recursive-backtracker-scanner-path.png)
+![LabyrinthBG](./img/recursive-backtracker-scanner-bg.png)
+
 Mazes For Programmers in Rust
 
 ## Colored Solutions
