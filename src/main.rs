@@ -14,22 +14,33 @@ mod recursive_backtracker;
 mod side_winder;
 mod wilson;
 
+mod deadend;
+
 const CELL_SIZE: f32 = config::CELL_SIZE;
 const GRID_SIZE: usize = config::GRID_SIZE;
 
 #[macroquad::main(conf)]
 async fn main() {
     let arg = &env::args().nth(1).unwrap().parse::<usize>().unwrap();
-
-    let (grid, max_distance) = builder(*arg);
-
+    
+    let (grid, max_distance) = builder(*arg, true);
+    
     loop {
         grid.render((max_distance as f32 * 0.8) as u32, MODE::BACKGROUNDS);
         next_frame().await
     }
 }
 
-fn builder<'a>(algo: usize) -> (Grid, u32){
+#[allow(dead_code)]
+fn deadend_details(){
+    for i in 1..=6{
+        let (grid, max_distance) = builder(i, false);
+        let (deadend, total_cells) = deadend::scan(&grid);
+        println!("{}-> distance: {}, deadend: {}/{}, %: {}", i, max_distance, deadend, total_cells, deadend*100/total_cells);
+    }
+}
+
+fn builder<'a>(algo: usize, save_image: bool) -> (Grid, u32){
     let algorithm;
     let mut grid: grid::Grid;
     let mut start: (usize, usize) = (0,0);
@@ -66,7 +77,7 @@ fn builder<'a>(algo: usize) -> (Grid, u32){
             algorithm = "recursive-backtracker";
         }
         7 => {
-            let mask_data = mask::Mask::new("masks/aang.png", mask::MaskType::Image);
+            let mask_data = mask::Mask::new("masks/aapa.png", mask::MaskType::Image);
             grid = grid::Grid::new(mask_data.row, mask_data.col);
             grid.apply_mask(mask_data);
             start = grid.random_alive_cell();
@@ -102,29 +113,31 @@ fn builder<'a>(algo: usize) -> (Grid, u32){
     let (max_distance, cell) = distances::farthest_cell(&grid, start);
     distances::solution(&mut grid, start, cell);
 
-    (0..8).for_each(|id|{
+    if save_image {
+        (0..8).for_each(|id|{
+            grid.save_to_image(
+                max_distance,
+                &format!("choice/{}-{}-bg.png", id, algorithm),
+                MODE::BACKGROUNDS,
+                false,
+                id
+            );
+        });
         grid.save_to_image(
             max_distance,
-            &format!("choice/{}-{}-bg.png", id, algorithm),
-            MODE::BACKGROUNDS,
+            &format!("choice/{}.png", algorithm),
+            MODE::WALLS,
             false,
-            id
+            0
         );
-    });
-    grid.save_to_image(
-        max_distance,
-        &format!("choice/{}.png", algorithm),
-        MODE::WALLS,
-        false,
-        0
-    );
-    grid.save_to_image(
-        max_distance,
-        &format!("choice/{}-solved.png", algorithm),
-        MODE::WALLS,
-        true,
-        0
-    );
+        grid.save_to_image(
+            max_distance,
+            &format!("choice/{}-solved.png", algorithm),
+            MODE::WALLS,
+            true,
+            0
+        );
+    }
 
     (grid, max_distance)
 }

@@ -38,7 +38,7 @@ fn create_image_mask(image_path: &str) -> ((u32, u32), Vec<Vec<u8>>) {
         for x in 0..width {
             let rgba = image.get_pixel(x, y);
             println!("{:?}", rgba);
-            if rgba[0] == 250 {
+            if rgba[3] != 0 {
                 row.push(1u8);
             } else {
                 row.push(0u8);

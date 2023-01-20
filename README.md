@@ -34,12 +34,11 @@ A time taking algo, but lacks bias.
 
 ![Aldous Broder Labyrinth path](img/aldous-broder-bg.png)
 ![Aldous Broder Labyrinth bg](img/aldous-broder-solved.png)
-> showing the longest path in a aldous broder maze
+> showing the longest path in an aldous broder maze
 
 ## Wilson Algorithm
 
-The algorithm starts by choosing a point on the grid—any point—and marking it visited. Then it chooses any unvisited cell in the grid and does one of these loop-erased random walks until it encounters a visited cell. At that point it adds the path it followed to the maze, marking as visited each of the cells along that path, and then it goes again. The process repeats until all the cells in the grid have been visited.
-
+We start by choosing a point on the grid marking it visited. Then we choose any unvisited cell in the grid and randomly walk until we encounter a visited cell. At that point we add the path followed to the solution, marking each as visited, and then repeat. The process repeats until all the cells in the grid have been visited.
 Unbaised like Aldous Broder but focuses on visited cells rather than unvisited cells.
 
 ![Wilson Labyrinth 1](img/wilson-bg.png)
@@ -61,6 +60,16 @@ Same as Hunt and Kill, but on finding no unvisited neighbour, we backtrack the v
 ![Recursive Backtraking Labyrinth 1](img/recursive-backtracker-bg.png)
 ![Recursive Backtraking Labyrinth 2](img/recursive-backtracker-solved.png)
 > showing the longest path in a recursive backtracking maze
+
+## Algorithm analytics
+```
+           BinaryTree -> longest_path_length: 73,  deadend: 100/400, %: 25
+           Sidewinder -> longest_path_length: 70,  deadend: 111/400, %: 27
+         AldousBroder -> longest_path_length: 109, deadend: 117/400, %: 29
+               Wilson -> longest_path_length: 106, deadend: 115/400, %: 28
+          HuntAndKill -> longest_path_length: 147, deadend: 40/400,  %: 10
+RecursiveBacktracking -> longest_path_length: 244, deadend: 41/400,  %: 10
+```
 
 ## Masking
 We can create a text/image file where some cells are inactive. And when we run an algorithm on it
