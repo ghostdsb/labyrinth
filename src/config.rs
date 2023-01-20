@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-pub const CELL_SIZE: f32 = 10.0;
+pub const CELL_SIZE: f32 = 15.0;
 pub const GRID_SIZE: usize = 5;
 pub const FLOW_COLOR: Color = GREEN;
 pub const FLOW_BACKGROUND: Color = BLACK;

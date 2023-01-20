@@ -5,8 +5,7 @@ use macroquad::prelude::*;
 
 use image::{Rgb, RgbImage};
 use imageproc::drawing::{
-    draw_cross_mut, draw_filled_circle, draw_filled_circle_mut, draw_filled_rect_mut,
-    draw_hollow_circle_mut, draw_hollow_rect_mut, draw_line_segment_mut,
+    draw_filled_circle_mut, draw_filled_rect_mut, draw_line_segment_mut,
 };
 use imageproc::rect::Rect;
 use macroquad::rand::gen_range;
@@ -157,7 +156,7 @@ impl Grid {
         neighbours
     }
 
-    pub fn save_to_image(&self, max_distance: u32, filename: &str, mode: MODE, solved: bool) {
+    pub fn save_to_image(&self, max_distance: u32, filename: &str, mode: MODE, solved: bool, color_index: u8) {
         let path = Path::new(filename);
         let mut image = RgbImage::new(
             CELL_SIZE as u32 * (self.cols + 2) as u32,
@@ -200,14 +199,27 @@ impl Grid {
                             (max_distance as f32 - cell.distance as f32) / max_distance as f32;
                         let dark = intensity;
                         let bright = 0.5 + 0.5 * intensity;
+
+                        let (r,g,b) = match color_index{
+                            0 => (bright, bright, bright),
+                            1 => (bright, bright, dark),
+                            2 => (bright, dark, bright),
+                            3 => (dark, bright, bright),
+                            4 => (bright, dark, dark),
+                            5 => (dark, bright, dark),
+                            6 => (dark, dark, bright),
+                            7 => (dark, dark, dark),
+                            _ => (bright, bright, bright)
+                        };
+
                         draw_filled_rect_mut(
                             &mut image,
                             Rect::at(lt_x as i32, lt_y as i32)
                                 .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
                             Rgb([
-                                (bright * 255f32) as u8,
-                                (bright * 255f32) as u8,
-                                (dark * 255f32) as u8,
+                                (r * 255f32) as u8,
+                                (g * 255f32) as u8,
+                                (b * 255f32) as u8,
                             ]),
                         );
                     } else {
@@ -348,7 +360,7 @@ impl Grid {
                 let rb_x = rt_x;
                 let rb_y = lb_y;
 
-                let mut wall_color = WALL_COLOR;
+                let wall_color;
 
                 if self.cells[i][j].is_alive {
                     if mode == MODE::BACKGROUNDS {

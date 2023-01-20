@@ -1,4 +1,4 @@
-use grid::MODE;
+use grid::{MODE, Grid};
 use macroquad::prelude::*;
 use std::env;
 
@@ -21,27 +21,37 @@ const GRID_SIZE: usize = config::GRID_SIZE;
 async fn main() {
     let arg = &env::args().nth(1).unwrap().parse::<usize>().unwrap();
 
+    let (grid, max_distance) = builder(*arg);
+
+    loop {
+        grid.render((max_distance as f32 * 0.8) as u32, MODE::BACKGROUNDS);
+        next_frame().await
+    }
+}
+
+fn builder<'a>(algo: usize) -> (Grid, u32){
+    let algorithm;
     let mut grid: grid::Grid;
     let mut start: (usize, usize) = (0,0);
-    let mut algorithm = "algo";
-    match arg {
+
+    match algo {
         1 => {
-            grid = grid::Grid::new(10, 10);
+            grid = grid::Grid::new(20, 20);
             binary_tree::on(&mut grid);
             algorithm = "binary-tree";
         }
         2 => {
-            grid = grid::Grid::new(10, 10);
+            grid = grid::Grid::new(20, 20);
             side_winder::on(&mut grid);
             algorithm = "sidewinder";
         }
         3 => {
-            grid = grid::Grid::new(10, 10);
+            grid = grid::Grid::new(20, 20);
             aldous_broder::on(&mut grid);
             algorithm = "aldous-broder";
         }
         4 => {
-            grid = grid::Grid::new(10, 10);
+            grid = grid::Grid::new(20, 20);
             wilson::on(&mut grid);
             algorithm = "wilson";
         }
@@ -61,7 +71,7 @@ async fn main() {
             grid.apply_mask(mask_data);
             start = grid.random_alive_cell();
             recursive_backtracker::on(&mut grid);
-            algorithm = "recursive-backtracker-image-scanner1";
+            algorithm = "recursive-backtracker-image-scanner";
         }
         8 => {
             let mask_data = mask::Mask::new("masks/mask.txt", mask::MaskType::Text);
@@ -71,6 +81,14 @@ async fn main() {
             start = grid.random_alive_cell();
             recursive_backtracker::on(&mut grid);
             algorithm = "recursive-backtracker-text-scanner";
+        }
+        9 => {
+            let mask_data = mask::Mask::new("masks/pan.png", mask::MaskType::Image);
+            grid = grid::Grid::new(mask_data.row, mask_data.col);
+            grid.apply_mask(mask_data);
+            start = grid.random_alive_cell();
+            recursive_backtracker::on(&mut grid);
+            algorithm = "recursive-backtracker-image-scanner-cover";
         }
         _ => unimplemented!(),
     }
@@ -84,29 +102,31 @@ async fn main() {
     let (max_distance, cell) = distances::farthest_cell(&grid, start);
     distances::solution(&mut grid, start, cell);
 
+    (0..8).for_each(|id|{
+        grid.save_to_image(
+            max_distance,
+            &format!("choice/{}-{}-bg.png", id, algorithm),
+            MODE::BACKGROUNDS,
+            false,
+            id
+        );
+    });
     grid.save_to_image(
         max_distance,
-        &format!("image/{}-bg.png", algorithm),
-        MODE::BACKGROUNDS,
-        false,
-    );
-    grid.save_to_image(
-        max_distance,
-        &format!("image/{}.png", algorithm),
+        &format!("choice/{}.png", algorithm),
         MODE::WALLS,
         false,
+        0
     );
     grid.save_to_image(
         max_distance,
-        &format!("image/{}-solved.png", algorithm),
+        &format!("choice/{}-solved.png", algorithm),
         MODE::WALLS,
         true,
+        0
     );
 
-    loop {
-        grid.render((max_distance as f32 * 0.8) as u32, MODE::BACKGROUNDS);
-        next_frame().await
-    }
+    (grid, max_distance)
 }
 
 fn configure(grid: &mut grid::Grid) {
