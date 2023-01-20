@@ -22,21 +22,28 @@ const GRID_SIZE: usize = config::GRID_SIZE;
 #[macroquad::main(conf)]
 async fn main() {
     let arg = &env::args().nth(1).unwrap().parse::<usize>().unwrap();
-    
-    let (grid, max_distance) = builder(*arg, true);
-    
-    loop {
-        grid.render((max_distance as f32 * 0.8) as u32, MODE::BACKGROUNDS);
-        next_frame().await
+
+    match arg{
+        0 => deadend_analytics(),
+        1..=9 => {
+            let (grid, max_distance) = builder(*arg, true);
+            
+            loop {
+                grid.render((max_distance as f32 * 0.8) as u32, MODE::BACKGROUNDS);
+                next_frame().await
+            }
+        }
+        _ => unimplemented!()
     }
+    
 }
 
 #[allow(dead_code)]
-fn deadend_details(){
+fn deadend_analytics(){
     for i in 1..=6{
         let (grid, max_distance) = builder(i, false);
         let (deadend, total_cells) = deadend::scan(&grid);
-        println!("{}-> distance: {}, deadend: {}/{}, %: {}", i, max_distance, deadend, total_cells, deadend*100/total_cells);
+        println!("{}-> longest_path_length: {}, deadend: {}/{}, %: {}", i, max_distance, deadend, total_cells, deadend*100/total_cells);
     }
 }
 

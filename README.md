@@ -2,9 +2,10 @@
 
 ![Labyrinth](./labyrinth.png)
 
-
-
 Rust implementation of the algorithms in  [Mazes For Programmers](http://www.mazesforprogrammers.com/)
+
+![Aapa](img/recursive-backtracker-image-scanner-bg.png)
+An aapa-labyrinth to help him overcome his fear of dark labyrinths.
 
 ## Colored Solutions
 
@@ -104,4 +105,24 @@ mazes are made by ignoring the cells
 
 ### Image Masking
 
-![Aang](img/recursive-backtracker-image-scanner-bg.png)
+![Aapa](img/4-recursive-backtracker-image-scanner-bg.png)
+
+## How to use
+
+`cargo run 0` -> algorithm analytics
+
+`cargo run 1` -> binarytree algorithm
+
+`cargo run 2` -> sidewinder algorithm
+
+`cargo run 3` -> aldous broder algorithm
+
+`cargo run 4` -> wilson algorithm
+
+`cargo run 5` -> hunt and kill algorithm
+
+`cargo run 6` -> recursive backtracking algorithm
+
+`cargo run 7` -> image masking (alpha 0 are dead pixels)
+
+`cargo run 8` -> text masking (X's are dead pixels)
