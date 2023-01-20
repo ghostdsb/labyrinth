@@ -9,81 +9,98 @@ mod config;
 mod distances;
 mod grid;
 mod hunt_and_kill;
+mod mask;
 mod recursive_backtracker;
 mod side_winder;
 mod wilson;
-mod mask;
-mod image_scanner;
 
 const CELL_SIZE: f32 = config::CELL_SIZE;
 const GRID_SIZE: usize = config::GRID_SIZE;
 
 #[macroquad::main(conf)]
 async fn main() {
-
-    // image_scanner::create_mask("repo.png");
-    let mask_data = mask::Mask::new("repo.png");
-
-    let mut grid = grid::Grid::new(mask_data.row,mask_data.col);
-
-    grid.apply_mask(mask_data);
-
     let arg = &env::args().nth(1).unwrap().parse::<usize>().unwrap();
-    
+
+    let mut grid: grid::Grid;
+    let mut start: (usize, usize) = (0,0);
     let mut algorithm = "algo";
     match arg {
         1 => {
+            grid = grid::Grid::new(10, 10);
             binary_tree::on(&mut grid);
             algorithm = "binary-tree";
         }
         2 => {
+            grid = grid::Grid::new(10, 10);
             side_winder::on(&mut grid);
             algorithm = "sidewinder";
         }
         3 => {
+            grid = grid::Grid::new(10, 10);
             aldous_broder::on(&mut grid);
             algorithm = "aldous-broder";
         }
         4 => {
+            grid = grid::Grid::new(10, 10);
             wilson::on(&mut grid);
             algorithm = "wilson";
         }
         5 => {
+            grid = grid::Grid::new(20, 20);
             hunt_and_kill::on(&mut grid);
             algorithm = "hunt-and-kill";
         }
         6 => {
+            grid = grid::Grid::new(20, 20);
             recursive_backtracker::on(&mut grid);
             algorithm = "recursive-backtracker";
         }
         7 => {
+            let mask_data = mask::Mask::new("masks/aang.png", mask::MaskType::Image);
+            grid = grid::Grid::new(mask_data.row, mask_data.col);
+            grid.apply_mask(mask_data);
+            start = grid.random_alive_cell();
             recursive_backtracker::on(&mut grid);
-            algorithm = "recursive-backtracker-scanner";
+            algorithm = "recursive-backtracker-image-scanner1";
+        }
+        8 => {
+            let mask_data = mask::Mask::new("masks/mask.txt", mask::MaskType::Text);
+            println!("{:?}", mask_data.bits);
+            grid = grid::Grid::new(mask_data.row, mask_data.col);
+            grid.apply_mask(mask_data);
+            start = grid.random_alive_cell();
+            recursive_backtracker::on(&mut grid);
+            algorithm = "recursive-backtracker-text-scanner";
         }
         _ => unimplemented!(),
     }
 
     configure(&mut grid);
 
-    let start = grid.random_alive_cell();
     distances::distances(&mut grid, start);
-
     let (_max_distance, cell) = distances::farthest_cell(&grid, start);
-
-    let start = cell;
+    start = cell;
     distances::distances(&mut grid, start);
     let (max_distance, cell) = distances::farthest_cell(&grid, start);
     distances::solution(&mut grid, start, cell);
 
     grid.save_to_image(
         max_distance,
-        &format!("img/{}-bg.png", algorithm),
+        &format!("image/{}-bg.png", algorithm),
         MODE::BACKGROUNDS,
+        false,
     );
     grid.save_to_image(
         max_distance,
-        &format!("img/{}-path.png", algorithm),
+        &format!("image/{}.png", algorithm),
         MODE::WALLS,
+        false,
+    );
+    grid.save_to_image(
+        max_distance,
+        &format!("image/{}-solved.png", algorithm),
+        MODE::WALLS,
+        true,
     );
 
     loop {

@@ -1,9 +1,10 @@
 # Labyrinth
 
-![Labyrinth](./img/recursive-backtracker-scanner-path.png)
-![LabyrinthBG](./img/recursive-backtracker-scanner-bg.png)
+![Labyrinth](./labyrinth.png)
 
-Mazes For Programmers in Rust
+
+
+Rust implementation of the algorithms in  [Mazes For Programmers in Rust](http://www.mazesforprogrammers.com/)
 
 ## Colored Solutions
 
@@ -40,3 +41,40 @@ Unbaised like Aldous Broder but focuses on visited cells rather than unvisited c
 
 ![Wilson Labyrinth 1](./labyrinths/wilson-bg.png)
 ![Wilson Labyrinth 2](./labyrinths/wilson-path.png)
+
+## Hunt And Kill Algorithm
+
+We start randomly from any cell, then traverse to unvisited neighbour. When we run out of unvisited neighbour, we randomly choose an unvisited cell that neighbours the visited cell and make path between those. Then we repeat the method untill all cells are visited.
+
+![Hunt and Kill Labyrinth 1](./image/hunt-and-kill-bg.png)
+![Hunt and Kill Labyrinth 2](./image/hunt-and-kill-solved.png)
+
+## Recursive Backtracking
+
+Same as Hunt and Kill, but on finding no unvisited neighbour, we backtrack the visited cells until we find one with unvisited neighbour.
+
+![Recursive Backtraking Labyrinth 1](./image/recursive-backtracker-bg.png)
+![Recursive Backtraking Labyrinth 2](./image/recursive-backtracker-solved.png)
+
+## Masking
+We can create a text/image file where some cells are inactive. And when we run an algorithm on it
+mazes are made by ignoring the cells
+
+### Text Masking
+```
+................................
+.XXXXX...XXXXXX.XXXXXXXXXXXXXXX.
+.XX.........XXX.XXXXXXX.XXXXXXX.
+.XXX.......XXXX.XXXXXX...XXXXXX.
+.XXXX.....XXXXX.XXXXX.....XXXXX.
+.XXXXX...XXXXXX.XXXX.......XXXX.
+.XXXXXX.XXXXXXX.XXX.........XXX.
+.XXXXXXXXXXXXXX.XXXXXX...XXXXXX.
+................................
+```
+
+![Googles](./labyrinths/recursive-backtracker-text-scanner-bg.png)
+
+### Image Masking
+
+![Aang](./labyrinths/aang.png)

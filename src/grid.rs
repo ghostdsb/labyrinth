@@ -1,6 +1,6 @@
 use crate::cell::Cell;
-use crate::mask::Mask;
 use crate::config;
+use crate::mask::Mask;
 use macroquad::prelude::*;
 
 use image::{Rgb, RgbImage};
@@ -50,20 +50,20 @@ impl Grid {
     }
 
     pub fn apply_mask(&mut self, mask: Mask) {
-        for i in 0..mask.bits.len(){
-            for j in 0..mask.bits[i].len(){
-                if mask.bits[i][j] == 0{
+        for i in 0..mask.bits.len() {
+            for j in 0..mask.bits[i].len() {
+                if mask.bits[i][j] == 0 {
                     self.cells[i][j].is_alive = false;
                 }
             }
         }
     }
 
-    pub fn alive_cells(&self) -> u32{
+    pub fn alive_cells(&self) -> u32 {
         let mut c = 0;
-        for i in 0..self.rows{
-            for j in 0..self.cols{
-                if self.cells[i][j].is_alive{
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                if self.cells[i][j].is_alive {
                     c += 1;
                 }
             }
@@ -72,11 +72,11 @@ impl Grid {
     }
 
     pub fn random_alive_cell(&self) -> (usize, usize) {
-        let mut alive = vec!();
-        for i in 0..self.rows{
-            for j in 0..self.cols{
-                if self.cells[i][j].is_alive{
-                    alive.push((i,j));
+        let mut alive = vec![];
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                if self.cells[i][j].is_alive {
+                    alive.push((i, j));
                 }
             }
         }
@@ -89,25 +89,25 @@ impl Grid {
         let mut neighbours = vec![];
 
         if let Some((r, c)) = self.cells[index.0][index.1].east_neighbour() {
-            if self.cells[r][c].is_alive{
+            if self.cells[r][c].is_alive {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].west_neighbour() {
-            if self.cells[r][c].is_alive{
+            if self.cells[r][c].is_alive {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].north_neighbour() {
-            if self.cells[r][c].is_alive{
+            if self.cells[r][c].is_alive {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].south_neighbour() {
-            if self.cells[r][c].is_alive{
+            if self.cells[r][c].is_alive {
                 neighbours.push((r, c));
             }
         }
@@ -119,25 +119,37 @@ impl Grid {
         let mut neighbours = vec![];
 
         if let Some((r, c)) = self.cells[index.0][index.1].east_neighbour() {
-            if !self.cells[index.0][index.1].east && !self.cells[r][c].west && self.cells[r][c].is_alive {
+            if !self.cells[index.0][index.1].east
+                && !self.cells[r][c].west
+                && self.cells[r][c].is_alive
+            {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].west_neighbour() {
-            if !self.cells[index.0][index.1].west && !self.cells[r][c].east && self.cells[r][c].is_alive {
+            if !self.cells[index.0][index.1].west
+                && !self.cells[r][c].east
+                && self.cells[r][c].is_alive
+            {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].north_neighbour() {
-            if !self.cells[index.0][index.1].north && !self.cells[r][c].south && self.cells[r][c].is_alive{
+            if !self.cells[index.0][index.1].north
+                && !self.cells[r][c].south
+                && self.cells[r][c].is_alive
+            {
                 neighbours.push((r, c));
             }
         }
 
         if let Some((r, c)) = self.cells[index.0][index.1].south_neighbour() {
-            if !self.cells[index.0][index.1].south && !self.cells[r][c].north && self.cells[r][c].is_alive{
+            if !self.cells[index.0][index.1].south
+                && !self.cells[r][c].north
+                && self.cells[r][c].is_alive
+            {
                 neighbours.push((r, c));
             }
         }
@@ -145,7 +157,7 @@ impl Grid {
         neighbours
     }
 
-    pub fn save_to_image(&self, max_distance: u32, filename: &str, mode: MODE) {
+    pub fn save_to_image(&self, max_distance: u32, filename: &str, mode: MODE, solved: bool) {
         let path = Path::new(filename);
         let mut image = RgbImage::new(
             CELL_SIZE as u32 * (self.cols + 2) as u32,
@@ -170,7 +182,6 @@ impl Grid {
                 let wall_color;
 
                 if self.cells[i][j].is_alive {
-
                     if mode == MODE::BACKGROUNDS {
                         let mut col = FLOW_COLOR;
                         col.a = cell.distance as f32 / max_distance as f32;
@@ -195,8 +206,8 @@ impl Grid {
                                 .of_size(CELL_SIZE as u32, CELL_SIZE as u32),
                             Rgb([
                                 (bright * 255f32) as u8,
-                                (dark * 255f32) as u8,
                                 (bright * 255f32) as u8,
+                                (dark * 255f32) as u8,
                             ]),
                         );
                     } else {
@@ -212,7 +223,7 @@ impl Grid {
                         );
                         wall_color = BLUE;
                     }
-    
+
                     // north
                     if cell.north_wall() {
                         draw_line_segment_mut(
@@ -226,7 +237,7 @@ impl Grid {
                             ]),
                         );
                     }
-    
+
                     // west
                     if cell.west_wall() {
                         draw_line_segment_mut(
@@ -240,7 +251,7 @@ impl Grid {
                             ]),
                         );
                     }
-    
+
                     // south
                     if cell.south_wall() {
                         draw_line_segment_mut(
@@ -254,7 +265,7 @@ impl Grid {
                             ]),
                         );
                     }
-    
+
                     // east
                     if cell.east_wall() {
                         draw_line_segment_mut(
@@ -268,13 +279,11 @@ impl Grid {
                             ]),
                         );
                     }
-
                 }
-
             }
         }
 
-        if mode == MODE::WALLS {
+        if mode == MODE::WALLS && solved {
             // self.path
             //     .iter()
             //     .for_each(|c| println!("{},{}", c.row, c.col));
@@ -342,12 +351,11 @@ impl Grid {
                 let mut wall_color = WALL_COLOR;
 
                 if self.cells[i][j].is_alive {
-
                     if mode == MODE::BACKGROUNDS {
                         let mut col = FLOW_COLOR;
                         col.a = cell.distance as f32 / max_distance as f32;
                         wall_color = WALL_COLOR;
-    
+
                         draw_rectangle(lt_x, lt_y, CELL_SIZE, CELL_SIZE, FLOW_BACKGROUND);
                         let intensity =
                             (max_distance as f32 - cell.distance as f32) / max_distance as f32;
@@ -377,22 +385,22 @@ impl Grid {
                             TEXT_COLOR,
                         );
                     }
-    
+
                     // north
                     if cell.north_wall() {
                         draw_line(lt_x, lt_y, rt_x, rt_y, 1.0, wall_color);
                     }
-    
+
                     // west
                     if cell.west_wall() {
                         draw_line(lt_x, lt_y, lb_x, lb_y, 1.0, wall_color);
                     }
-    
+
                     // south
                     if cell.south_wall() {
                         draw_line(lb_x, lb_y, rb_x, rb_y, 1.0, wall_color);
                     }
-    
+
                     // east
                     if cell.east_wall() {
                         draw_line(rt_x, rt_y, rb_x, rb_y, 1.0, wall_color);

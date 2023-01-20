@@ -5,8 +5,11 @@ use rand::thread_rng;
 pub fn on(grid: &mut Grid) {
     let mut unvisited: Vec<(usize, usize)> = vec![];
     grid.cells.iter().for_each(|row| {
-        row.iter()
-            .for_each(|cell| unvisited.push((cell.row, cell.col)))
+        row.iter().for_each(|cell| {
+            if cell.is_alive {
+                unvisited.push((cell.row, cell.col))
+            }
+        })
     });
 
     // unvisited.shuffle(&mut thread_rng());

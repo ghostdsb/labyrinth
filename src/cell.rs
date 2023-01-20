@@ -1,5 +1,3 @@
-use crate::config;
-
 #[derive(PartialEq, Clone, Copy)]
 pub struct Cell {
     pub row: usize,
@@ -31,7 +29,7 @@ impl Cell {
             solution_path: false,
             is_alive: true,
             grid_col_count,
-            grid_row_count
+            grid_row_count,
         }
     }
 

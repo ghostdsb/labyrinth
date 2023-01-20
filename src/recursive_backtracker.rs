@@ -2,8 +2,8 @@ use crate::grid::Grid;
 use macroquad::rand::gen_range;
 
 pub fn on(grid: &mut Grid) {
-    let r = gen_range(0, grid.rows);
-    let c = gen_range(0, grid.cols);
+    let (r, c) = (5,5);
+    // let (r, c) = grid.random_alive_cell();
 
     let mut current = (grid.cells[r][c].row, grid.cells[r][c].col);
 
